@@ -161,40 +161,23 @@ impl SpaceViewClass for SpatialSpaceView3D {
         // Spawn a space view at each subspace that has any potential 3D content.
         // Note that visualizability filtering is all about being in the right subspace,
         // so we don't need to call the visualizers' filter functions here.
-        SpatialTopology::access(ctx.entity_db.store_id(), |topo| {
-            let split_root_spaces = root_space_split_heuristic(
-                topo,
-                &indicated_entities,
-                SubSpaceDimensionality::ThreeD,
-            );
-
-            SpaceViewSpawnHeuristics {
-                recommended_space_views: topo
-                    .iter_subspaces()
-                    .flat_map(|subspace| {
-                        if subspace.origin.is_root() && !split_root_spaces.is_empty() {
-                            itertools::Either::Left(split_root_spaces.values())
-                        } else {
-                            itertools::Either::Right(std::iter::once(subspace))
-                        }
-                    })
-                    .filter_map(|subspace| {
-                        if subspace.dimensionality == SubSpaceDimensionality::TwoD
-                            || subspace.entities.is_empty()
-                            || indicated_entities.is_disjoint(&subspace.entities)
-                        {
-                            None
-                        } else {
-                            Some(RecommendedSpaceView {
-                                root: subspace.origin.clone(),
-                                query_filter: EntityPathFilter::subtree_entity_filter(
-                                    &subspace.origin,
-                                ),
-                            })
-                        }
-                    })
-                    .collect(),
-            }
+        SpatialTopology::access(ctx.entity_db.store_id(), |topo| SpaceViewSpawnHeuristics {
+            recommended_space_views: topo
+                .iter_subspaces()
+                .filter_map(|subspace| {
+                    if subspace.dimensionality == SubSpaceDimensionality::TwoD
+                        || subspace.entities.is_empty()
+                        || indicated_entities.is_disjoint(&subspace.entities)
+                    {
+                        None
+                    } else {
+                        Some(RecommendedSpaceView {
+                            root: subspace.origin.clone(),
+                            query_filter: EntityPathFilter::subtree_entity_filter(&subspace.origin),
+                        })
+                    }
+                })
+                .collect(),
         })
         .unwrap_or_default()
     }
