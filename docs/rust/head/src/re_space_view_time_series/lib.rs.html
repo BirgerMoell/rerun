@@ -155,7 +155,7 @@
 
 <span class="kw">impl </span>Eq <span class="kw">for </span>PlotPointAttrs {}
 
-<span class="attr">#[derive(Clone, Debug)]
+<span class="attr">#[derive(Clone, Debug, PartialEq)]
 </span><span class="kw">struct </span>PlotPoint {
     time: i64,
     value: f64,

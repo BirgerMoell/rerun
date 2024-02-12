@@ -206,6 +206,9 @@
 <a href="#206" id="206">206</a>
 <a href="#207" id="207">207</a>
 <a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
 </pre></div><pre class="rust"><code><span class="kw">use crate</span>::{PlotPoint, PlotPointAttrs};
 
 <span class="doccomment">/// Implements aggregation behaviors corresponding to [`TimeSeriesAggregator`][re_viewer_context::external::re_entity_db::TimeSeriesAggregator]:
@@ -214,6 +217,9 @@
 
 <span class="kw">impl </span>AverageAggregator {
     <span class="doccomment">/// `aggregation_factor`: the width of the aggregation window.
+    ///
+    /// Adjacent plot points may have the same `PlotPoint::time`,
+    /// if data was logged multiple times on the same time stamp.
     </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>aggregate(aggregation_factor: f64, points: <span class="kw-2">&amp;</span>[PlotPoint]) -&gt; Vec&lt;PlotPoint&gt; {
         <span class="kw">let </span>min_time = points.first().map_or(i64::MIN, |p| p.time);
@@ -228,15 +234,14 @@
 
         <span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">0</span>;
         <span class="kw">while </span>i &lt; points.len() {
-            <span class="kw">let </span><span class="kw-2">mut </span>j = <span class="number">0</span>;
+            <span class="comment">// How many points to combine together this time.
+            </span><span class="kw">let </span><span class="kw-2">mut </span>j = <span class="number">0</span>;
 
             <span class="kw">let </span><span class="kw-2">mut </span>ratio = <span class="number">1.0</span>;
             <span class="kw">let </span><span class="kw-2">mut </span>acc = points[i + j].clone();
             j += <span class="number">1</span>;
 
-            <span class="kw">while </span>j &lt; window_size
-                &amp;&amp; i + j &lt; points.len()
-                &amp;&amp; are_aggregatable(<span class="kw-2">&amp;</span>points[i], <span class="kw-2">&amp;</span>points[i + j], window_size)
+            <span class="kw">while </span>i + j &lt; points.len() &amp;&amp; are_aggregatable(<span class="kw-2">&amp;</span>points[i], <span class="kw-2">&amp;</span>points[i + j], window_size)
             {
                 <span class="kw">let </span>point = <span class="kw-2">&amp;</span>points[i + j];
 
@@ -301,7 +306,9 @@
 }
 
 <span class="kw">impl </span>MinMaxAggregator {
-    <span class="attr">#[inline]
+    <span class="doccomment">/// Adjacent plot points may have the same `PlotPoint::time`,
+    /// if data was logged multiple times on the same time stamp.
+    </span><span class="attr">#[inline]
     </span><span class="kw">pub fn </span>aggregate(<span class="kw-2">&amp;</span><span class="self">self</span>, aggregation_window_size: f64, points: <span class="kw-2">&amp;</span>[PlotPoint]) -&gt; Vec&lt;PlotPoint&gt; {
         <span class="comment">// NOTE: `round()` since this can only handle discrete window sizes.
         </span><span class="kw">let </span>window_size = usize::max(<span class="number">1</span>, aggregation_window_size.round() <span class="kw">as </span>usize);
@@ -317,15 +324,14 @@
 
         <span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">0</span>;
         <span class="kw">while </span>i &lt; points.len() {
-            <span class="kw">let </span><span class="kw-2">mut </span>j = <span class="number">0</span>;
+            <span class="comment">// How many points to combine together this time.
+            </span><span class="kw">let </span><span class="kw-2">mut </span>j = <span class="number">0</span>;
 
             <span class="kw">let </span><span class="kw-2">mut </span>acc_min = points[i + j].clone();
             <span class="kw">let </span><span class="kw-2">mut </span>acc_max = points[i + j].clone();
             j += <span class="number">1</span>;
 
-            <span class="kw">while </span>j &lt; window_size
-                &amp;&amp; i + j &lt; points.len()
-                &amp;&amp; are_aggregatable(<span class="kw-2">&amp;</span>points[i], <span class="kw-2">&amp;</span>points[i + j], window_size)
+            <span class="kw">while </span>i + j &lt; points.len() &amp;&amp; are_aggregatable(<span class="kw-2">&amp;</span>points[i], <span class="kw-2">&amp;</span>points[i + j], window_size)
             {
                 <span class="kw">let </span>point = <span class="kw-2">&amp;</span>points[i + j];
 
@@ -356,7 +362,7 @@
             <span class="kw">match </span><span class="self">self </span>{
                 MinMaxAggregator::MinMax =&gt; {
                     aggregated.push(acc_min);
-                    <span class="comment">// Don&#39;t push the same point twice.
+                    <span class="comment">// Avoid pushing the same point twice.
                     </span><span class="kw">if </span>j &gt; <span class="number">1 </span>{
                         aggregated.push(acc_max);
                     }

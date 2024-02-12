@@ -314,6 +314,13 @@
 <a href="#314" id="314">314</a>
 <a href="#315" id="315">315</a>
 <a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>re_log_types::{EntityPath, TimeInt, TimeRange};
 <span class="kw">use </span>re_types::datatypes::Utf8;
 <span class="kw">use </span>re_viewer_context::{external::re_entity_db::TimeSeriesAggregator, ViewQuery, ViewerContext};
@@ -466,7 +473,14 @@
     // So it can be displayed in the UI by the SpaceViewClass.
     </span><span class="kw">let </span>num_points_before = points.len() <span class="kw">as </span>f64;
 
-    <span class="kw">let </span>points = <span class="kw">if </span>aggregation_duration &gt; <span class="number">2.0 </span>{
+    <span class="comment">// If the user logged multiples scalars per time stamp, we should aggregate them,
+    // no matter what the aggregation duration (=zoom level) is.
+    </span><span class="kw">let </span>multiple_values_per_time_stamp = || points.windows(<span class="number">2</span>).any(|w| w[<span class="number">0</span>].time == w[<span class="number">1</span>].time);
+
+    <span class="kw">let </span>should_aggregate = aggregator != TimeSeriesAggregator::Off
+        &amp;&amp; (<span class="number">2.0 </span>&lt;= aggregation_duration || multiple_values_per_time_stamp());
+
+    <span class="kw">let </span>points = <span class="kw">if </span>should_aggregate {
         <span class="macro">re_tracing::profile_scope!</span>(<span class="string">&quot;aggregate&quot;</span>, aggregator.to_string());
 
         <span class="attr">#[allow(clippy::match_same_arms)] </span><span class="comment">// readability
