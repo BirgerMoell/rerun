@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["add_recommended_space_views_for_image_bucket","bucket_images_in_subspace","count_non_nested_entities_with_component"],"struct":["SpatialSpaceView2D","VisualizableFilterContext2D"]};

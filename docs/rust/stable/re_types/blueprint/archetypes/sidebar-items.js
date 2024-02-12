@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["space_view_blueprint"],"struct":["SpaceViewBlueprint"]};

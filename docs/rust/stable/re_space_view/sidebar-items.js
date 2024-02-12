@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ScreenshotMode","UnreachableTransformReason"],"fn":["diff_component_filter"],"mod":["blueprint","controls","data_query","data_query_blueprint","screenshot","unreachable_transform_reason"],"struct":["DataQueryBlueprint","EntityOverrideContext"],"trait":["DataQuery","PropertyResolver"]};

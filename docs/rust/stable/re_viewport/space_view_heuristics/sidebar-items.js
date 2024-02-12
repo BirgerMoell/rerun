@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"fn":["all_possible_space_views","candidate_space_view_paths","default_created_space_views","is_interesting_space_view_at_root","is_interesting_space_view_not_at_root","is_spatial_2d_class","is_spatial_class","spawn_one_space_view_per_entity"]};

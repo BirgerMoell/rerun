@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["SubSpaceDimensionality"],"struct":["SpatialTopology","SpatialTopologyStoreSubscriber","SubSpace","SubSpaceConnectionFlags"]};

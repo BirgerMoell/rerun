@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"struct":["SpatialSpaceView2D","VisualizableFilterContext2D"]};

@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["ColorMapper","Colormap","LegendCorner","VisibleHistoryBoundary"],"struct":["EntityProperties","EntityPropertyMap","ExtraQueryHistory","VisibleHistory"]};

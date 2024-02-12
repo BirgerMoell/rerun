@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["space_view_component"],"struct":["SpaceViewComponent"]};

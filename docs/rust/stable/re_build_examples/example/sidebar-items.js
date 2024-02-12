@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["Channel"],"fn":["parse_frontmatter"],"struct":["Example","Frontmatter","InvalidChannelName"]};

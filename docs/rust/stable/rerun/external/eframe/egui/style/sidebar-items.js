@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["FontSelection","HandleShape","TextStyle"],"fn":["default_text_styles"],"struct":["DebugOptions","Interaction","Margin","ScrollStyle","Selection","Spacing","Style","Visuals","WidgetVisuals","Widgets"]};

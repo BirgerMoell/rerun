@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"mod":["external","flat_vec_deque"],"struct":["FlatVecDeque"],"trait":["ErasedFlatVecDeque"]};
